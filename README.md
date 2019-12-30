@@ -39,6 +39,34 @@ Here's a general idea of the business work flow:
 
 > This app does not make care of mobile POS or code validation aspects.
 
+## Run
+
+1. Clone this repository:
+
+```
+git clone https://github.com/SkewerSpot/thankyou-gen.git
+```
+
+2. Go to app folder:
+
+```
+cd thankyou-gen
+```
+
+3. Download all dependencies (really just one, `static-server`):
+
+```
+npm install
+```
+
+4. Start the app.
+
+```
+npm start
+```
+
+5. In browser, visit http://localhost:1337.
+
 ## Screenshot
 
 ![Thank You Note Generator](https://user-images.githubusercontent.com/1288616/71568376-b9701400-2aec-11ea-876c-7e7cb91e5c8d.png)
@@ -48,6 +76,8 @@ Here's a general idea of the business work flow:
 This application heavily relies on the excellent work by developers behind [jsPDF](https://github.com/MrRio/jsPDF) library.
 
 Kazuhiko's [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) is used for client-side qr code generation.
+
+[static-server](https://github.com/nbluis/static-server) npm package to serve this web app in a local server.
 
 > We are using `debug` version of jsPDF since the `minified` / `production` version results in errors as of 2019-12-30.
 
