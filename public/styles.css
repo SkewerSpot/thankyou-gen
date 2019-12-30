@@ -1,0 +1,34 @@
+body {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  padding: 20px;
+}
+
+.iframe-container {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.iframe-container h3 {
+  margin-bottom: 0;
+}
+
+iframe {
+  margin-top: 20px;
+  /* border: 0; */
+  width: 500px;
+  height: 500px;
+}
+
+input {
+  width: 50px;
+}
+
+input.large {
+  width: 100px;
+  height: 30px;
+}
+
+.form-field {
+  display: inline;
+  margin-right: 20px;
+}

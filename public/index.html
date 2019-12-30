@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Thank You Note Generator</title>
+
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+
+  <body>
+    <form id="formCustomize">
+      <fieldset>
+        <legend>Customizations</legend>
+
+        <div class="form-field">
+          <label for="numPages">Number of pages:</label>
+          <input id="numPages" type="number" min="1" />
+        </div>
+
+        <div class="form-field">
+          <label for="numBoxesPerPage">Boxes per page:</label>
+          <input id="numBoxesPerPage" type="number" min="1" />
+        </div>
+
+        <div class="form-field">
+          <label for="numCodesToCollect">Codes to collect:</label>
+          <input id="numCodesToCollect" type="number" min="1" />
+        </div>
+
+        <input id="btnGenerate" class="large" type="submit" value="Generate" />
+      </fieldset>
+    </form>
+
+    <div class="iframe-container">
+      <h3>Front Pages:</h3>
+      <iframe id="frontPdf"></iframe>
+    </div>
+    <div class="iframe-container">
+      <h3>Back Page:</h3>
+      <iframe id="backPdf"></iframe>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="/vendor/jquery.min.js"></script>
+    <script src="/vendor/jspdf.debug.js"></script>
+    <script src="/vendor/qrcode.js"></script>
+    <script src="/script.js"></script>
+    <!-- /SCRIPTS -->
+  </body>
+</html>

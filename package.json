@@ -1,0 +1,15 @@
+{
+  "name": "thankyou-gen",
+  "version": "1.0.0",
+  "description": "A simple webpage that generates thank you notes with unique codes.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Anurag Bhandari <ab@anuragbhandari.com>",
+  "license": "MIT",
+  "dependencies": {
+    "static-server": "^2.2.1"
+  }
+}
