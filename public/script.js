@@ -275,7 +275,7 @@ function createInstructionsBoxContent(doc, offset) {
     '* The Foodie Kitchen (TFK)',
     '* Oye Hoye! Punjabi Dhaba (OHPD)',
     '',
-    `${CONSTANTS.numCodesToCollect} unique codes can be redeemed IN YOUR NEXT ORDER for:`,
+    `Send us ${CONSTANTS.numCodesToCollect} unique codes in your next order to get 1 FREE meal:`,
     CONSTANTS.freebies.map(f => `(${f})`).join(' OR '),
     '',
     'Codes once used cannot be redeemed again.',
