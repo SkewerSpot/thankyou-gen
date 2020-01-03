@@ -55,7 +55,8 @@ const CONSTANTS = {
   textTopMargin: 10, // millimeters
   qrCodeSize: 50, // pixels (height and width),
   uniqueCodes: [],
-  numCodesToCollect: 3
+  numCodesToCollect: 3,
+  freebies: ['Amritsari Mix Naan Plate', 'Pav Bhaji', 'Nutri Kulcha Plate']
 };
 
 /**
@@ -270,22 +271,22 @@ function createInstructionsBox(doc, offset) {
 function createInstructionsBoxContent(doc, offset) {
   const instructions = [
     'Receive a unique code each time you order from:',
-    'SkewerSpot, The Foodie Kitchen, or Oye Hoye! Punjabi Dhaba.',
+    '* SkewerSpot',
+    '* The Foodie Kitchen (TFK)',
+    '* Oye Hoye! Punjabi Dhaba (OHPD)',
     '',
-    `${CONSTANTS.numCodesToCollect} unique codes can be redeemed for:`,
-    'Amritsari Mix Naan Plate OR Pav Bhaji OR Nutri Kulcha Plate.',
+    `${CONSTANTS.numCodesToCollect} unique codes can be redeemed IN YOUR NEXT ORDER for:`,
+    CONSTANTS.freebies.map(f => `(${f})`).join(' OR '),
     '',
     'Codes once used cannot be redeemed again.',
     '',
-    '1. Open SkewerSpot menu in Zomato app.',
-    '2. Add 1 "Cake Pop" to Cart. It will cost you Rs. 20.',
-    '3. You may also add other items to cart.',
-    '4. Click on "View Cart" button.',
-    '5. On the Cart page, click on "Add cooking instructions" link.',
-    `6. Enter your ${CONSTANTS.numCodesToCollect} unique codes (separated by comma).`,
-    '7. Also enter your FREE meal choice from above 3 options.',
-    '8. Click the "Place Order" button to finalize your order.',
-    '9. Sit back and relax. You will receive your FREE meal along with ordered items.'
+    '1. Start creating your next Zomato order from SkewerSpot or TFK or OHPD.',
+    '2. Once you have added desired items to cart, click on "View Cart" button.',
+    '3. On the Cart page, click on "Add cooking instructions" link.',
+    `4. Enter your ${CONSTANTS.numCodesToCollect} unique codes (separated by comma).`,
+    `5. Also enter your FREE meal choice from above ${CONSTANTS.freebies.length} options.`,
+    '6. Click the "Place Order" button to finalize your order.',
+    '7. Sit back and relax. You will receive your FREE meal along with ordered items.'
   ];
   const textX = CONSTANTS.boxContentPadding;
   let textY = offset + CONSTANTS.boxContentPadding;
