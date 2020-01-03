@@ -56,7 +56,14 @@ const CONSTANTS = {
   qrCodeSize: 50, // pixels (height and width),
   uniqueCodes: [],
   numCodesToCollect: 3,
-  freebies: ['Amritsari Mix Naan Plate', 'Pav Bhaji', 'Nutri Kulcha Plate']
+  freebies: [
+    'Amritsari Mix Naan Plate',
+    'Pav Bhaji',
+    'Nutri Kulcha Plate',
+    'Red Sauce Pasta',
+    'Veg Chowmein',
+    'Brownie',
+  ]
 };
 
 /**
