@@ -63,7 +63,7 @@ const CONSTANTS = {
     'Amritsari Mix Naan Plate',
     'Pav Bhaji',
     'Nutri Kulcha Plate',
-    'Red Sauce Pasta',
+    'Arrabiata Pasta',
     'Veg Chowmein',
     'Brownie'
   ]
@@ -294,12 +294,15 @@ function createInstructionsBox(doc, offset) {
 function createInstructionsBoxContent(doc, offset) {
   const instructions = [
     'Receive a unique code each time you order from:',
-    '* SkewerSpot',
-    '* The Foodie Kitchen (TFK)',
-    '* Oye Hoye! Punjabi Dhaba (OHPD)',
+    'SkewerSpot // The Foodie Kitchen (TFK) // Oye Hoye! Punjabi Dhaba (OHPD)',
     '',
     `Send us ${CONSTANTS.numCodesToCollect} unique codes in your next order to get 1 FREE meal:`,
-    CONSTANTS.freebies.map(f => `(${f})`).join(' OR '),
+    ...CONSTANTS.freebies.reduce((splitArr, freebie, index) => {
+      splitArr[Math.floor(index / 3)] +=
+        `(${freebie})` +
+        (index !== CONSTANTS.freebies.length - 1 ? ' OR ' : '');
+      return splitArr;
+    }, Array(Math.ceil(CONSTANTS.freebies.length / 3)).fill('')), // split into 3 freebies per line
     '',
     'Codes once used cannot be redeemed again.',
     '',
