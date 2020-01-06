@@ -56,13 +56,15 @@ const CONSTANTS = {
   qrCodeSize: 50, // pixels (height and width),
   uniqueCodes: [],
   numCodesToCollect: 3,
+  brandLogoHeight: 15, // millimeters
+  brandLogoGap: 5, // millimeters
   freebies: [
     'Amritsari Mix Naan Plate',
     'Pav Bhaji',
     'Nutri Kulcha Plate',
     'Red Sauce Pasta',
     'Veg Chowmein',
-    'Brownie',
+    'Brownie'
   ]
 };
 
@@ -188,6 +190,7 @@ function createThankYouBox(doc, offset) {
  */
 function createThankYouBoxContent(doc, offset, code) {
   createQrCode(doc, offset, code);
+  createBrandLogos(doc, offset);
   createThankYouBoxHeadline(doc, offset);
   createThankYouBoxText(doc, offset, code);
 }
@@ -306,6 +309,44 @@ function createInstructionsBoxContent(doc, offset) {
 }
 
 /**
+ * Draws logos of all our brands.
+ *
+ * @param {jsPDF} doc The PDF document object.
+ * @param {Number} offset Number of units from document's top.
+ */
+function createBrandLogos(doc, offset) {
+  const y = 20 + offset;
+
+  // SkewerSpot logo
+  const ssImgEl = document.getElementById('logoSS');
+  const ssDataUri = getDataUri(ssImgEl);
+  const ssHeight = CONSTANTS.brandLogoHeight - 4; // default logo height makes it too wide
+  const ssWidth = ssImgEl.naturalWidth * (ssHeight / ssImgEl.naturalHeight);
+  const ssX = CONSTANTS.qrCodeSize + CONSTANTS.brandLogoGap;
+  const ssY = y + 2; // slight adjustment because of non-default height
+  doc.addImage(ssDataUri, 'PNG', ssX, ssY, ssWidth, ssHeight);
+
+  // The Foodie Kitchen logo
+  const tfkImgEl = document.getElementById('logoTFK');
+  const tfkDataUri = getDataUri(tfkImgEl);
+  const tfkHeight = CONSTANTS.brandLogoHeight;
+  const tfkWidth = tfkImgEl.naturalWidth * (tfkHeight / tfkImgEl.naturalHeight);
+  const tfkX = ssX + ssWidth + CONSTANTS.brandLogoGap;
+  const tfkY = y;
+  doc.addImage(tfkDataUri, 'PNG', tfkX, tfkY, tfkWidth, tfkHeight);
+
+  // Oye Hoye Punjabi Dhaba logo
+  const ohpdImgEl = document.getElementById('logoOHPD');
+  const ohpdDataUri = getDataUri(ohpdImgEl);
+  const ohpdHeight = CONSTANTS.brandLogoHeight;
+  const ohpdWidth =
+    ohpdImgEl.naturalWidth * (ohpdHeight / ohpdImgEl.naturalHeight);
+  const ohpdX = tfkX + tfkWidth + CONSTANTS.brandLogoGap;
+  const ohpdY = y;
+  doc.addImage(ohpdDataUri, 'PNG', ohpdX, ohpdY, ohpdWidth, ohpdHeight);
+}
+
+/**
  * Returns a random 6-digit code.
  */
 function generateRandomCode() {
@@ -325,4 +366,27 @@ function seedUniqueCodes() {
   }
 
   CONSTANTS.uniqueCodes = Array.from(codeSet);
+}
+
+/**
+ * Returns base64 data URI representation for given image.
+ *
+ * Based on code at https://davidwalsh.name/convert-image-data-uri-javascript.
+ *
+ * We are not using the `img.onload` technique to avoid async code.
+ *
+ * @param {HTMLImageElement} img DOM object of a loaded image element.
+ */
+function getDataUri(img) {
+  if (!('nodeName' in img && img.nodeName === 'IMG')) {
+    throw new Error('The given image is not a valid HTML IMG element.');
+  }
+
+  var canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth; // or 'width' if you want a special/scaled size
+  canvas.height = img.naturalHeight; // or 'height' if you want a special/scaled size
+
+  canvas.getContext('2d').drawImage(img, 0, 0);
+
+  return canvas.toDataURL('image/png');
 }
