@@ -304,7 +304,7 @@ function createInstructionsBoxContent(doc, offset) {
       return splitArr;
     }, Array(Math.ceil(CONSTANTS.freebies.length / 3)).fill('')), // split into 3 freebies per line
     '',
-    'Codes once used cannot be redeemed again.',
+    ['Codes once used cannot be redeemed again.', 'bold'],
     '',
     '1. Start creating your next Zomato order from SkewerSpot or TFK or OHPD.',
     '2. Once you have added desired items to cart, click on "View Cart" button.',
@@ -318,8 +318,21 @@ function createInstructionsBoxContent(doc, offset) {
   let textY = offset + CONSTANTS.boxContentPadding;
 
   doc.setFontSize(CONSTANTS.smallFontSize);
+
   instructions.forEach(instruction => {
-    doc.text(instruction, textX, textY);
+    let text,
+      fontStyle = 'normal';
+    if (typeof instruction === 'string') {
+      text = instruction;
+    } else if (Array.isArray(instruction)) {
+      text = instruction[0];
+      // For possible values, check:
+      // http://raw.githack.com/MrRio/jsPDF/master/docs/jsPDF.html#setFontStyle
+      // Most common values will be "normal", "bold", "italic"
+      fontStyle = instruction[1];
+    }
+    doc.setFontStyle(fontStyle);
+    doc.text(text, textX, textY);
     textY += 7;
   });
 }
