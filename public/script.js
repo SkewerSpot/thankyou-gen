@@ -56,6 +56,7 @@ const CONSTANTS = {
   qrCodeSize: 50, // pixels (height and width),
   uniqueCodes: [],
   numCodesToCollect: 3,
+  uniqeCodeValidUntil: 'February 29, 2020',
   brandLogoHeight: 15, // millimeters
   brandLogoGap: 5, // millimeters
   freebies: [
@@ -223,7 +224,7 @@ function createThankYouBoxText(doc, offset, code) {
     CONSTANTS.pageHeight / (CONSTANTS.numBoxesPerPage * 2) +
     CONSTANTS.textTopMargin; // below the headline
   doc.setFontSize(CONSTANTS.bodyFontSize);
-  doc.text(`Your unique code is: ${code}`, text1X, text1Y);
+  doc.text(`Your unique code is: ${code}*`, text1X, text1Y);
 
   const text2X = text1X;
   const text2Y = text1Y + CONSTANTS.textTopMargin; // below text1
@@ -232,6 +233,18 @@ function createThankYouBoxText(doc, offset, code) {
     text2X,
     text2Y
   );
+
+  doc.setFontSize(CONSTANTS.smallFontSize);
+
+  const text3X = text1X;
+  const text3Y = text2Y + CONSTANTS.textTopMargin * 3; // below text2
+  doc.setFontStyle('bolditalic');
+  doc.text(`Valid until ${CONSTANTS.uniqeCodeValidUntil}`, text3X, text3Y);
+
+  const text4X = text1X;
+  const text4Y = text3Y + CONSTANTS.textTopMargin / 2; // below text3
+  doc.setFontStyle('normal');
+  doc.text('* Code once used CANNOT be used again.', text4X, text4Y);
 }
 
 /**
