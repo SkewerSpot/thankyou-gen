@@ -335,6 +335,15 @@ function createInstructionsBoxContent(doc, offset) {
     doc.text(text, textX, textY);
     textY += 7;
   });
+
+  doc.setFontStyle('italic');
+  doc.text(
+    'Your review on Zomato will mean a world to us :)',
+    CONSTANTS.pageWidth - CONSTANTS.pageContentPadding - 2,
+    textY,
+    null,
+    90
+  );
 }
 
 /**
