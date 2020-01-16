@@ -1,15 +1,7 @@
-const StaticServer = require('static-server');
+const express = require('express');
+const app = express();
+const port = 1337;
 
-const server = new StaticServer({
-  rootPath: 'public',
-  port: '1337',
-  name: 'BHD Web Server 1.0'
-});
+app.use(express.static('public'));
 
-server.start(() => {
-  console.log(`Server listening to ${server.port}`);
-});
-
-server.on('request', (req, res) => {
-  console.log(`[${req.elapsedTime}] ${req.path}`);
-});
+app.listen(port, () => console.log(`Listening on port ${port}`));

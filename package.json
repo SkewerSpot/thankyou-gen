@@ -10,6 +10,6 @@
   "author": "Anurag Bhandari <ab@anuragbhandari.com>",
   "license": "MIT",
   "dependencies": {
-    "static-server": "^2.2.1"
+    "express": "^4.17.1"
   }
 }
