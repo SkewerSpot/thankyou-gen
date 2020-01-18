@@ -25,4 +25,11 @@ describe('DB lib', function() {
       assert.equal(result.changes, 0);
     });
   });
+
+  describe('migrateDb()', function() {
+    it('should migrate the database', async function() {
+      const result = await dbLib.migrateDb();
+      assert.deepEqual(result, [{ id: 1, name: 'initial-schema' }]);
+    });
+  });
 });

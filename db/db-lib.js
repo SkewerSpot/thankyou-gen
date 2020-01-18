@@ -13,7 +13,7 @@ require('dotenv').config();
 async function executeCommand(command) {
   try {
     const db = await sqlite.open(process.env.SQLITE_DB_PATH);
-    const result = await db.run(statement);
+    const result = await db.run(command);
     await db.close();
     return result;
   } catch (e) {
@@ -21,6 +21,24 @@ async function executeCommand(command) {
   }
 }
 
+/**
+ * Applies SQL migrations contained inside homonymous directory.
+ *
+ * @returns {Promise}
+ */
+async function migrateDb() {
+  try {
+    const db = await sqlite.open(process.env.SQLITE_DB_PATH);
+    await db.migrate({ migrationsPath: './db/migrations' });
+    const migrationData = await db.all('SELECT id, name FROM migrations');
+    await db.close();
+    return migrationData;
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
 module.exports = {
-  executeCommand
+  executeCommand,
+  migrateDb
 };
