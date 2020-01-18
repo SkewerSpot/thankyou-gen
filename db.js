@@ -1,6 +1,6 @@
 const sqlite = require('sqlite3');
 
-const SQLITE_DB_PATH = './generated-codes.db';
+const SQLITE_DB_PATH = `./${process.env.SQLITE_DB_NAME}`;
 
 async function createDatabase() {
   const stmtCreateTblUniqueCodes = `

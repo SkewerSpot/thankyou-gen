@@ -9,3 +9,6 @@ node_modules
 
 # SQLite database
 generated-codes.db
+
+# Environment variables files
+*.env
