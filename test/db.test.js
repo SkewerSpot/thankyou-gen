@@ -170,4 +170,39 @@ describe('DB lib', function() {
       assert.deepEqual(result, [{ id: 1, name: 'initial-schema' }]);
     });
   });
+
+  describe('addUniqueCodes()', function() {
+    before(async function() {
+      deleteDb();
+      await seedData();
+    });
+
+    after(deleteDb);
+
+    it('should throw error if given input is not an array', async function() {
+      try {
+        const invalidInput = {};
+        await dbLib.addUniqueCodes(invalidInput);
+      } catch (e) {
+        assert.equal(e.message, 'Input must be an array of 6-digit strings');
+      }
+    });
+
+    it('should throw error if given input array contains invalid codes', async function() {
+      try {
+        const arrayOfInvalidCodes = ['123', 'abcdef'];
+        await dbLib.addUniqueCodes(arrayOfInvalidCodes);
+      } catch (e) {
+        assert.equal(e.message, 'Input must be an array of 6-digit strings');
+      }
+    });
+
+    it('should successfully add given 6-digit codes', async function() {
+      const codes = ['123456', '234567', '345678'];
+
+      const numCodesAdded = await dbLib.addUniqueCodes(codes);
+
+      assert.equal(numCodesAdded, 3);
+    });
+  });
 });

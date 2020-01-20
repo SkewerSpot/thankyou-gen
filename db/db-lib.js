@@ -2,6 +2,32 @@ const sqlite = require('sqlite');
 require('dotenv').config();
 
 /**
+ * Adds the given codes in database.
+ *
+ * @param {Array} codes A collection of 6-digit code strings.
+ *
+ * @returns {Promise} Count of codes successfully added.
+ */
+async function addUniqueCodes(codes) {
+  const inputIsArray = Array.isArray(codes);
+  const inputArrayHas6digitStrings =
+    codes.length > 0 &&
+    typeof codes[0] === 'string' &&
+    /^(\d){6}$/.test(codes[0]);
+
+  if (!inputIsArray || !inputArrayHas6digitStrings)
+    throw Error('Input must be an array of 6-digit strings');
+
+  const generatedDate = ''; // empty date means the code is yet unused
+  const statement = `INSERT INTO unique_codes VALUES ${codes
+    .map(code => `( '${code}', '${generatedDate}' )`)
+    .join(', ')}`;
+
+  const result = await executeStatement(statement);
+  return result.changes;
+}
+
+/**
  * Executes the given DDL statement.
  *
  * Does not validate whether the given statement is indeed a DDL statement.
@@ -85,6 +111,7 @@ async function migrateDb() {
 }
 
 module.exports = {
+  addUniqueCodes,
   executeCommand,
   executeStatement,
   executeQuery,
