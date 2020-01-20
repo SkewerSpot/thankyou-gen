@@ -205,4 +205,28 @@ describe('DB lib', function() {
       assert.equal(numCodesAdded, 3);
     });
   });
+
+  describe('isDbInitialized()', function() {
+    it('should return false if database file does not exist', async function() {
+      const result = await dbLib.isDbInitialized();
+      assert.equal(result, false);
+    });
+
+    it('should return false if seed data does not exist', async function() {
+      await dbLib.migrateDb();
+      const result = await dbLib.isDbInitialized();
+      deleteDb();
+
+      assert.equal(result, false);
+    });
+
+    it('should return false if only partial seed data exists', async function() {
+      await dbLib.migrateDb();
+      await seedData();
+      const result = await dbLib.isDbInitialized();
+      deleteDb();
+
+      assert.equal(result, false);
+    });
+  });
 });

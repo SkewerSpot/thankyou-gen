@@ -1,5 +1,12 @@
+const fs = require('fs');
 const sqlite = require('sqlite');
 require('dotenv').config();
+
+/**
+ * The total number of possible 6-digit unique codes
+ * between 000000 - 999999 (both values inclusive).
+ */
+const NUM_POSSIBLE_CODES = 1000000;
 
 /**
  * Adds the given codes in database.
@@ -25,6 +32,29 @@ async function addUniqueCodes(codes) {
 
   const result = await executeStatement(statement);
   return result.changes;
+}
+
+/**
+ * Checks whether our SQLite database is properly initialized
+ * with initial schema.
+ *
+ * The following checks are performed:
+ * - database file exists
+ * - intial schema has been migrated
+ * - seed data has been added
+ */
+async function isDbInitialized() {
+  if (!fs.existsSync(process.env.SQLITE_DB_PATH)) return false;
+
+  const querySchemaCheck = `SELECT name FROM sqlite_master WHERE type='table' AND name='unique_codes'`;
+  const resultSchemaCheck = await executeQuery(querySchemaCheck);
+  if (resultSchemaCheck.length !== 1) return false;
+
+  const querySeedDataCheck = `SELECT COUNT(code) AS num_codes FROM unique_codes`;
+  const resultSeedDataCheck = await executeQuery(querySeedDataCheck);
+  if (resultSeedDataCheck[0].num_codes != NUM_POSSIBLE_CODES) return false;
+
+  return true;
 }
 
 /**
@@ -111,7 +141,9 @@ async function migrateDb() {
 }
 
 module.exports = {
+  NUM_POSSIBLE_CODES,
   addUniqueCodes,
+  isDbInitialized,
   executeCommand,
   executeStatement,
   executeQuery,
