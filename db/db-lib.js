@@ -1,5 +1,6 @@
 const fs = require('fs');
 const sqlite = require('sqlite');
+const SQL = require('sql-template-strings');
 require('dotenv').config();
 
 /**
@@ -7,6 +8,42 @@ require('dotenv').config();
  * between 000000 - 999999 (both values inclusive).
  */
 const NUM_POSSIBLE_CODES = 1000000;
+
+/**
+ * Returns the next available `numCodes` unique codes.
+ *
+ * Here's how unique code "generation" works:
+ *
+ * Instead of generating new codes, our logic checks for `numCodes` codes
+ * in database whose `generated_date` is not set. These are the
+ * next `numCodes` available unique codes.
+ *
+ * Once the returned unique codes are consumed by the program,
+ * their `generated_date` is set to mark them as used.
+ *
+ * [TODO]:
+ * Wrap the two SQL statements in a transaction.
+ * The sqlite npm package does not explicitly make it clear how to create a transaction.
+ * See https://github.com/kriasoft/node-sqlite/issues/54.
+ */
+async function generateUniqueCodes(numCodes) {
+  if (!numCodes || typeof numCodes !== 'number') numCodes = 0;
+
+  const queryGetCodes = SQL`SELECT code FROM unique_codes WHERE generated_date = '' LIMIT ${numCodes}`;
+  const resultGetCodes = await executeQuery(queryGetCodes);
+  const codes = resultGetCodes.map(c => c.code);
+
+  if (codes.length > 0) {
+    const now = new Date().toISOString();
+    const stmtUpdateDate = `
+      UPDATE unique_codes SET generated_date = '${now}' 
+      WHERE code IN ( ${codes.map(c => `'${c}'`).join(',')} )
+  `;
+    await executeStatement(stmtUpdateDate);
+  }
+
+  return codes;
+}
 
 /**
  * Adds the given codes in database.
@@ -142,6 +179,7 @@ async function migrateDb() {
 
 module.exports = {
   NUM_POSSIBLE_CODES,
+  generateUniqueCodes,
   addUniqueCodes,
   isDbInitialized,
   executeCommand,

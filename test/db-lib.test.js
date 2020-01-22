@@ -23,10 +23,14 @@ function deleteDb() {
  */
 async function seedData() {
   await dbLib.migrateDb();
-  const code = '111111';
-  const ts = new Date().toISOString();
+  const code1 = '111111';
+  const ts1 = new Date().toISOString();
+  const code2 = '222222';
+  const ts2 = '';
+  const code3 = '333333';
+  const ts3 = '';
   await dbLib.executeStatement(
-    SQL`INSERT INTO unique_codes VALUES ( ${code}, ${ts} )`
+    `INSERT INTO unique_codes VALUES ( '${code1}', '${ts1}' ), ( '${code2}', '${ts2}' ), ( '${code3}', '${ts3}' )`
   );
 }
 
@@ -132,7 +136,7 @@ describe('DB lib', function() {
 
       const result = await dbLib.executeQuery(query);
 
-      assert.equal(result.length, 1);
+      assert.equal(result.length, 3);
     });
 
     it('should return a specific existing code', async function() {
@@ -227,6 +231,30 @@ describe('DB lib', function() {
       deleteDb();
 
       assert.equal(result, false);
+    });
+  });
+
+  describe('generateUniqueCodes()', function() {
+    before(async function() {
+      deleteDb();
+      await seedData();
+    });
+
+    after(deleteDb);
+
+    it('should return correct number of unique codes as requested', async function() {
+      const codes = await dbLib.generateUniqueCodes(2);
+      assert.equal(codes.length, 2);
+    });
+
+    it('should make generated codes unavailable for further use', async function() {
+      const codes = await dbLib.generateUniqueCodes(2);
+      assert.equal(codes.length, 0);
+    });
+
+    it('should return 0 unique codes when numCodes argument is omitted', async function() {
+      const codes = await dbLib.generateUniqueCodes();
+      assert.equal(codes.length, 0);
     });
   });
 });
