@@ -24,15 +24,6 @@ const Util = require('../util');
 seedDatabase();
 
 /**
- * Deletes the SQLite database file.
- */
-function deleteDb() {
-  if (fs.existsSync(process.env.SQLITE_DB_PATH)) {
-    fs.unlinkSync(process.env.SQLITE_DB_PATH);
-  }
-}
-
-/**
  * Initialzes database schema and adds seed data.
  *
  * Seed data is all possible 6-digit unique codes in random order.
@@ -43,7 +34,7 @@ async function seedDatabase() {
       console.log('✨ Database not yet initialized. Initializing...');
       const startTime = new Date();
 
-      deleteDb();
+      DbLib.deleteDb();
       await DbLib.migrateDb();
 
       let codes = new Set(); // ensures uniqueness

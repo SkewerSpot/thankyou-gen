@@ -177,6 +177,15 @@ async function migrateDb() {
   }
 }
 
+/**
+ * Deletes the SQLite database file.
+ */
+function deleteDb() {
+  if (fs.existsSync(process.env.SQLITE_DB_PATH)) {
+    fs.unlinkSync(process.env.SQLITE_DB_PATH);
+  }
+}
+
 module.exports = {
   NUM_POSSIBLE_CODES,
   generateUniqueCodes,
@@ -185,5 +194,6 @@ module.exports = {
   executeCommand,
   executeStatement,
   executeQuery,
-  migrateDb
+  migrateDb,
+  deleteDb
 };

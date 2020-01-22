@@ -6,17 +6,8 @@ const SQL = require('sql-template-strings');
 process.env.SQLITE_DB_PATH = './db/generated-codes.test.db';
 const dbLib = require('../db/db-lib');
 
-before(deleteDb);
-after(deleteDb);
-
-/**
- * Deletes the SQLite database file used by test environment.
- */
-function deleteDb() {
-  if (fs.existsSync(process.env.SQLITE_DB_PATH)) {
-    fs.unlinkSync(process.env.SQLITE_DB_PATH);
-  }
-}
+before(dbLib.deleteDb);
+after(dbLib.deleteDb);
 
 /**
  * Adds some seed data to help in testing.
@@ -60,11 +51,11 @@ describe('DB lib', function() {
 
   describe('executeStatement()', function() {
     before(async function() {
-      deleteDb();
+      dbLib.deleteDb();
       await seedData();
     });
 
-    after(deleteDb);
+    after(dbLib.deleteDb);
 
     it('should successfully add a new row', async function() {
       const code = '123456';
@@ -125,11 +116,11 @@ describe('DB lib', function() {
 
   describe('executeQuery()', function() {
     before(async function() {
-      deleteDb();
+      dbLib.deleteDb();
       await seedData();
     });
 
-    after(deleteDb);
+    after(dbLib.deleteDb);
 
     it('should return all existing codes', async function() {
       const query = SQL`SELECT * FROM unique_codes`;
@@ -177,11 +168,11 @@ describe('DB lib', function() {
 
   describe('addUniqueCodes()', function() {
     before(async function() {
-      deleteDb();
+      dbLib.deleteDb();
       await seedData();
     });
 
-    after(deleteDb);
+    after(dbLib.deleteDb);
 
     it('should throw error if given input is not an array', async function() {
       try {
@@ -219,7 +210,7 @@ describe('DB lib', function() {
     it('should return false if seed data does not exist', async function() {
       await dbLib.migrateDb();
       const result = await dbLib.isDbInitialized();
-      deleteDb();
+      dbLib.deleteDb();
 
       assert.equal(result, false);
     });
@@ -228,7 +219,7 @@ describe('DB lib', function() {
       await dbLib.migrateDb();
       await seedData();
       const result = await dbLib.isDbInitialized();
-      deleteDb();
+      dbLib.deleteDb();
 
       assert.equal(result, false);
     });
@@ -236,11 +227,11 @@ describe('DB lib', function() {
 
   describe('generateUniqueCodes()', function() {
     before(async function() {
-      deleteDb();
+      dbLib.deleteDb();
       await seedData();
     });
 
-    after(deleteDb);
+    after(dbLib.deleteDb);
 
     it('should return correct number of unique codes as requested', async function() {
       const codes = await dbLib.generateUniqueCodes(2);
