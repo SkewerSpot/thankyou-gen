@@ -20,12 +20,12 @@ $(document).ready(() => {
    *
    * Generates front page and back page documents in corresponding iframes.
    */
-  $('#formCustomize').submit(e => {
+  $('#formCustomize').submit(async e => {
     e.preventDefault();
 
     if (!jsPDF) return false;
 
-    seedUniqueCodes();
+    await seedUniqueCodes();
 
     const docFP = new jsPDF(); // front page document
     const docBP = new jsPDF(); // back page document
@@ -385,25 +385,24 @@ function createBrandLogos(doc, offset) {
 }
 
 /**
- * Returns a random 6-digit code.
- */
-function generateRandomCode() {
-  return Math.floor(100000 + Math.random() * 900000);
-}
-
-/**
  * Initializes `uniqeCodes` array with `numPages` * `numBoxesPerPage`
  * unique and random 6-digit codes.
  */
-function seedUniqueCodes() {
+async function seedUniqueCodes() {
   const numCodes = CONSTANTS.numPages * CONSTANTS.numBoxesPerPage;
-  const codeSet = new Set(); // a Set will ensure uniqueness
 
-  while (codeSet.size !== numCodes) {
-    codeSet.add(generateRandomCode().toString());
+  const response = await fetch(`/api/unique-codes?count=${numCodes}`);
+  const codes = await response.json();
+
+  if (!Array.isArray(codes)) codes = [];
+
+  if (codes.length < numCodes) {
+    for (i = codes.length; i < numCodes; i++) {
+      codes[i] = '';
+    }
   }
 
-  CONSTANTS.uniqueCodes = Array.from(codeSet);
+  CONSTANTS.uniqueCodes = codes;
 }
 
 /**
