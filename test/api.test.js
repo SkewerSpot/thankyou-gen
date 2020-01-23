@@ -16,7 +16,10 @@ const App = require('../index');
 const DbLib = require('../db/db-lib');
 
 before(DbLib.seedMockData);
-after(DbLib.deleteDb);
+after(() => {
+  DbLib.deleteDb();
+  App.server.close();
+});
 
 chai.use(chaiHttp);
 
