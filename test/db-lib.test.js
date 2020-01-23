@@ -9,22 +9,6 @@ const dbLib = require('../db/db-lib');
 after(dbLib.deleteDb);
 
 /**
- * Adds some seed data to help in testing.
- */
-async function seedData() {
-  await dbLib.migrateDb();
-  const code1 = '111111';
-  const ts1 = new Date().toISOString();
-  const code2 = '222222';
-  const ts2 = '';
-  const code3 = '333333';
-  const ts3 = '';
-  await dbLib.executeStatement(
-    `INSERT INTO unique_codes VALUES ( '${code1}', '${ts1}' ), ( '${code2}', '${ts2}' ), ( '${code3}', '${ts3}' )`
-  );
-}
-
-/**
  * Suite of tests.
  */
 describe('DB lib', function() {
@@ -51,7 +35,7 @@ describe('DB lib', function() {
   describe('executeStatement()', function() {
     before(async function() {
       dbLib.deleteDb();
-      await seedData();
+      await dbLib.seedMockData();
     });
 
     after(dbLib.deleteDb);
@@ -116,7 +100,7 @@ describe('DB lib', function() {
   describe('executeQuery()', function() {
     before(async function() {
       dbLib.deleteDb();
-      await seedData();
+      await dbLib.seedMockData();
     });
 
     after(dbLib.deleteDb);
@@ -168,7 +152,7 @@ describe('DB lib', function() {
   describe('addUniqueCodes()', function() {
     before(async function() {
       dbLib.deleteDb();
-      await seedData();
+      await dbLib.seedMockData();
     });
 
     after(dbLib.deleteDb);
@@ -216,7 +200,7 @@ describe('DB lib', function() {
 
     it('should return false if only partial seed data exists', async function() {
       await dbLib.migrateDb();
-      await seedData();
+      await dbLib.seedMockData();
       const result = await dbLib.isDbInitialized();
       dbLib.deleteDb();
 
@@ -227,7 +211,7 @@ describe('DB lib', function() {
   describe('generateUniqueCodes()', function() {
     before(async function() {
       dbLib.deleteDb();
-      await seedData();
+      await dbLib.seedMockData();
     });
 
     after(dbLib.deleteDb);

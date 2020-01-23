@@ -15,26 +15,8 @@ process.env.SQLITE_DB_PATH = './db/generated-codes.test.db';
 const App = require('../index');
 const DbLib = require('../db/db-lib');
 
-before(seedData);
+before(DbLib.seedMockData);
 after(DbLib.deleteDb);
-
-/**
- * Adds some seed data to help in testing.
- */
-async function seedData() {
-  await DbLib.migrateDb();
-  const code1 = '111111';
-  const ts1 = new Date().toISOString();
-  const code2 = '222222';
-  const ts2 = '';
-  const code3 = '333333';
-  const ts3 = '';
-  await DbLib.executeStatement(
-    `INSERT INTO unique_codes VALUES ( '${code1}', '${ts1}' ), ( '${code2}', '${ts2}' ), ( '${code3}', '${ts3}' )`
-  );
-  console.log('Seeding done');
-  console.log(`path: ${process.env.SQLITE_DB_PATH}`);
-}
 
 chai.use(chaiHttp);
 

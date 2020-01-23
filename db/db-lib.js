@@ -186,6 +186,22 @@ function deleteDb() {
   }
 }
 
+/**
+ * Adds some dummy seed data to help in testing.
+ */
+async function seedMockData() {
+  await migrateDb();
+  const code1 = '111111';
+  const ts1 = new Date().toISOString();
+  const code2 = '222222';
+  const ts2 = '';
+  const code3 = '333333';
+  const ts3 = '';
+  await executeStatement(
+    `INSERT INTO unique_codes VALUES ( '${code1}', '${ts1}' ), ( '${code2}', '${ts2}' ), ( '${code3}', '${ts3}' )`
+  );
+}
+
 module.exports = {
   NUM_POSSIBLE_CODES,
   generateUniqueCodes,
@@ -195,5 +211,6 @@ module.exports = {
   executeStatement,
   executeQuery,
   migrateDb,
-  deleteDb
+  deleteDb,
+  seedMockData
 };
