@@ -9,3 +9,5 @@ app.use(express.static('public'));
 app.use('/api', apiRoutes);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
+
+module.exports = app;
