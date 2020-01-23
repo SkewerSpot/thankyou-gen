@@ -6,7 +6,6 @@ const SQL = require('sql-template-strings');
 process.env.SQLITE_DB_PATH = './db/generated-codes.test.db';
 const dbLib = require('../db/db-lib');
 
-before(dbLib.deleteDb);
 after(dbLib.deleteDb);
 
 /**
