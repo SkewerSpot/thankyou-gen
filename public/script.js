@@ -17,24 +17,18 @@ $(document).ready(() => {
 
   /**
    * Handle the click event for Generate button.
-   *
-   * Generates front page and back page documents in corresponding iframes.
    */
   $('#formCustomize').submit(async e => {
     e.preventDefault();
+    await generatePDFs(false);
+  });
 
-    if (!jsPDF) return false;
-
-    await seedUniqueCodes();
-
-    const docFP = new jsPDF(); // front page document
-    const docBP = new jsPDF(); // back page document
-
-    createDocument(docFP, 'front');
-    createDocument(docBP, 'back');
-
-    $('#frontPdf').attr('src', docFP.output('datauristring'));
-    $('#backPdf').attr('src', docBP.output('datauristring'));
+  /**
+   * Handle the click event for Test button.
+   */
+  $('#btnTest').click(async e => {
+    e.preventDefault();
+    await generatePDFs(true);
   });
 });
 
@@ -78,6 +72,26 @@ function initFormDefaults() {
     const defaultVal = CONSTANTS[id];
     $(this).val(defaultVal);
   });
+}
+
+/**
+ * Generates front page and back page documents in corresponding iframes.
+ *
+ * @param {Boolean} withDummyCodes If true, dummy codes will be generated instead of getting from db.
+ */
+async function generatePDFs(withDummyCodes) {
+  if (!jsPDF) return false;
+
+  await seedUniqueCodes(withDummyCodes);
+
+  const docFP = new jsPDF(); // front page document
+  const docBP = new jsPDF(); // back page document
+
+  createDocument(docFP, 'front');
+  createDocument(docBP, 'back');
+
+  $('#frontPdf').attr('src', docFP.output('datauristring'));
+  $('#backPdf').attr('src', docBP.output('datauristring'));
 }
 
 /**
@@ -387,11 +401,15 @@ function createBrandLogos(doc, offset) {
 /**
  * Initializes `uniqeCodes` array with `numPages` * `numBoxesPerPage`
  * unique and random 6-digit codes.
+ *
+ * @param isDummy {Boolean} Whether dummy codes should be returned.
  */
-async function seedUniqueCodes() {
+async function seedUniqueCodes(isDummy) {
   const numCodes = CONSTANTS.numPages * CONSTANTS.numBoxesPerPage;
 
-  const response = await fetch(`/api/unique-codes?count=${numCodes}`);
+  let apiUrl = `/api/unique-codes?count=${numCodes}`;
+  if (isDummy) apiUrl += '&dummy=true';
+  const response = await fetch(apiUrl);
   const codes = await response.json();
 
   if (!Array.isArray(codes)) codes = [];
