@@ -17,24 +17,18 @@ $(document).ready(() => {
 
   /**
    * Handle the click event for Generate button.
-   *
-   * Generates front page and back page documents in corresponding iframes.
    */
-  $('#formCustomize').submit(e => {
+  $('#formCustomize').submit(async e => {
     e.preventDefault();
+    await generatePDFs(false);
+  });
 
-    if (!jsPDF) return false;
-
-    seedUniqueCodes();
-
-    const docFP = new jsPDF(); // front page document
-    const docBP = new jsPDF(); // back page document
-
-    createDocument(docFP, 'front');
-    createDocument(docBP, 'back');
-
-    $('#frontPdf').attr('src', docFP.output('datauristring'));
-    $('#backPdf').attr('src', docBP.output('datauristring'));
+  /**
+   * Handle the click event for Test button.
+   */
+  $('#btnTest').click(async e => {
+    e.preventDefault();
+    await generatePDFs(true);
   });
 });
 
@@ -78,6 +72,26 @@ function initFormDefaults() {
     const defaultVal = CONSTANTS[id];
     $(this).val(defaultVal);
   });
+}
+
+/**
+ * Generates front page and back page documents in corresponding iframes.
+ *
+ * @param {Boolean} withDummyCodes If true, dummy codes will be generated instead of getting from db.
+ */
+async function generatePDFs(withDummyCodes) {
+  if (!jsPDF) return false;
+
+  await seedUniqueCodes(withDummyCodes);
+
+  const docFP = new jsPDF(); // front page document
+  const docBP = new jsPDF(); // back page document
+
+  createDocument(docFP, 'front');
+  createDocument(docBP, 'back');
+
+  $('#frontPdf').attr('src', docFP.output('datauristring'));
+  $('#backPdf').attr('src', docBP.output('datauristring'));
 }
 
 /**
@@ -385,25 +399,28 @@ function createBrandLogos(doc, offset) {
 }
 
 /**
- * Returns a random 6-digit code.
- */
-function generateRandomCode() {
-  return Math.floor(100000 + Math.random() * 900000);
-}
-
-/**
  * Initializes `uniqeCodes` array with `numPages` * `numBoxesPerPage`
  * unique and random 6-digit codes.
+ *
+ * @param isDummy {Boolean} Whether dummy codes should be returned.
  */
-function seedUniqueCodes() {
+async function seedUniqueCodes(isDummy) {
   const numCodes = CONSTANTS.numPages * CONSTANTS.numBoxesPerPage;
-  const codeSet = new Set(); // a Set will ensure uniqueness
 
-  while (codeSet.size !== numCodes) {
-    codeSet.add(generateRandomCode().toString());
+  let apiUrl = `/api/unique-codes?count=${numCodes}`;
+  if (isDummy) apiUrl += '&dummy=true';
+  const response = await fetch(apiUrl);
+  const codes = await response.json();
+
+  if (!Array.isArray(codes)) codes = [];
+
+  if (codes.length < numCodes) {
+    for (i = codes.length; i < numCodes; i++) {
+      codes[i] = '';
+    }
   }
 
-  CONSTANTS.uniqueCodes = Array.from(codeSet);
+  CONSTANTS.uniqueCodes = codes;
 }
 
 /**

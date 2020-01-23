@@ -6,3 +6,9 @@ node_modules
 
 # IDE directories
 .vscode
+
+# SQLite database
+generated-codes.db
+
+# Environment variables files
+*.env

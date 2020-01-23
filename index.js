@@ -1,15 +1,15 @@
-const StaticServer = require('static-server');
+require('dotenv').config();
+const express = require('express');
+const apiRoutes = require('./api');
 
-const server = new StaticServer({
-  rootPath: 'public',
-  port: '1337',
-  name: 'BHD Web Server 1.0'
-});
+const app = express();
+const port = 1337;
 
-server.start(() => {
-  console.log(`Server listening to ${server.port}`);
-});
+app.use(express.static('public'));
+app.use('/api', apiRoutes);
 
-server.on('request', (req, res) => {
-  console.log(`[${req.elapsedTime}] ${req.path}`);
-});
+// Save Server instance in a custom prop
+// Especially useful in stopping the server once automated tests have finished
+app.server = app.listen(port, () => console.log(`Listening on port ${port}`));
+
+module.exports = app;

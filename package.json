@@ -4,12 +4,21 @@
   "description": "A simple webpage that generates thank you notes with unique codes.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "test": "mocha",
+    "start": "node index.js",
+    "dbseed": "node db/seed.js"
   },
   "author": "Anurag Bhandari <ab@anuragbhandari.com>",
   "license": "MIT",
   "dependencies": {
-    "static-server": "^2.2.1"
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "sql-template-strings": "^2.2.2",
+    "sqlite": "^3.0.3"
+  },
+  "devDependencies": {
+    "mocha": "^7.0.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0"
   }
 }
