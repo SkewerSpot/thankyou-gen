@@ -1,7 +1,5 @@
 # Thank You Note Generator
 
-What's up with the weird name? Don't care too much about the name.
-
 SkewerSpot is a small and innovative cafe in Jalandhar, India. We create a lot of software to solve our own problems and to automate things around. This little app is one such experiment, part of our offline promotion strategy.
 
 ## Why
@@ -14,7 +12,9 @@ The answer is: through unique codes.
 
 ## What
 
-Thank You Gen is a browser-based JavaScript application that generates thank you notes, each with a unique 6-digit code and a corresponding QR code. The output is two files:
+> A companion app of [SS Orders](https://github.com/SkewerSpot/ss-orders-app).
+
+Thank You Gen is a JavaScript application that generates thank you notes, each with a unique 6-digit code and a corresponding QR code. The output is two files:
 
 1. A PDF document with front page material
 2. A PDF document with back page material
@@ -22,6 +22,11 @@ Thank You Gen is a browser-based JavaScript application that generates thank you
 Front page contains thank you message and a unique 6-digit code. The app allows one to customize, among other things, how many unique codes (front pages) should be generated.
 
 Back page contains instructions to redeem codes.
+
+The generation of unique codes is handled at server side (Node/Express), whereas the generation of final PDF documents is handled at client side (browser). Unique codes are stored in a persistent SQLite database.
+
+
+Currently it is possible to generate a maximum of 1 million codes. So, for example, you can generate a total of ten thousand  (only!) 100-page front PDFs.
 
 ## How
 
@@ -37,7 +42,7 @@ Here's a general idea of the business work flow:
 8. Codes when received by us are entered in our mobile POS for validation.
 9. If everything checks out, we pack a free goodie with customer's current order.
 
-> This app does not make care of mobile POS or code validation aspects.
+> This app does not take care of mobile POS or code validation aspects. Check [SS Orders](https://github.com/SkewerSpot/ss-orders-app) for the POS part.
 
 ## Run
 
@@ -53,33 +58,45 @@ git clone https://github.com/SkewerSpot/thankyou-gen.git
 cd thankyou-gen
 ```
 
-3. Download all dependencies (really just one, `static-server`):
+3. Download all dependencies:
 
 ```
 npm install
 ```
 
-4. Start the app.
+4. Rename `.env.example` as `.env`. This file contains database path environment variable.
+
+5. Seed the unique codes database (this step is important):
+```
+npm run dbseed
+```
+
+6. Start the app.
 
 ```
 npm start
 ```
 
-5. In browser, visit http://localhost:1337.
+7. In browser, visit http://localhost:1337.
+
+8. (optional) Run unit tests to ensure sanity:
+```
+npm run test
+```
 
 ## Screenshot
 
-![Thank You Note Generator](https://user-images.githubusercontent.com/1288616/71568376-b9701400-2aec-11ea-876c-7e7cb91e5c8d.png)
+![Thank You Note Generator](https://user-images.githubusercontent.com/1288616/73330992-6377c300-4288-11ea-8b5c-8d6a564e5dd0.png)
 
 ## Credits
 
 This application heavily relies on the excellent work by developers behind [jsPDF](https://github.com/MrRio/jsPDF) library.
 
-Kazuhiko's [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) is used for client-side qr code generation.
-
-[static-server](https://github.com/nbluis/static-server) npm package to serve this web app in a local server.
-
 > We are using `debug` version of jsPDF since the `minified` / `production` version results in errors as of 2019-12-30.
+
+Kazuhiko's [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) is used for client-side QR code generation.
+
+[ExpressJS](https://expressjs.com) is our local server that exposes API endpoints to interact with unique codes database.
 
 ## Contact
 
